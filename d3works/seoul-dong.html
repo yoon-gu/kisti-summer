@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+path {
+  stroke-linejoin: round;
+}
+
+.land {
+  fill: #ddd;
+}
+
+.subland {
+  fill: none;
+}
+
+.states {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+
+.substates {
+  fill: none;
+  stroke: #fff;
+  stroke-width: .5px;
+}
+
+svg .municipality-label {
+  fill: #808080;
+  font-size: 12px;
+  font-weight: 300;
+  text-anchor: middle;
+  font-family: sans-serif;
+}
+</style>
+<body>
+<script src="//d3js.org/d3.v3.min.js"></script>
+<script src="//d3js.org/queue.v1.min.js"></script>
+<script src="//d3js.org/topojson.v1.min.js"></script>
+<script>
+
+var width = 960,
+    height = 550;
+
+var projection = d3.geo.mercator()
+    .center([126.9895, 37.5651])
+    .scale(90000)
+    .translate([width/2, height/2]);
+
+var path = d3.geo.path().projection(projection);
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+queue()
+    .defer(d3.json, "https://gist.githubusercontent.com/yoon-gu/b051fd123385303a5c03f0e0a833516c/raw/9fff4a65830be008709112c190c3ed939d42e994/seoul_municipalities_topo.json")
+    .defer(d3.json, "https://gist.githubusercontent.com/yoon-gu/292357d88f07092f8759238a10cddd2f/raw/bbcdb2cbca6fa5278038e44a6d0aad3f9521fb3e/.seoul_submunicipalities_topo.json")
+    .await(ready);
+
+function ready(error, seoul, subseoul) {
+  if (error) throw error;
+
+  svg.append("path")
+      .datum(topojson.feature(seoul, seoul.objects.seoul_municipalities_geo))
+      .attr("class", "land")
+      .attr("d", path);
+
+  svg.append("path")
+      .datum(topojson.mesh(seoul, seoul.objects.seoul_municipalities_geo, function(a, b) { return a !== b; }))
+      .attr("class", "states")
+      .attr("d", path);
+
+  svg.append("path")
+      .datum(topojson.feature(subseoul, subseoul.objects.seoul_submunicipalities_geo))
+      .attr("class", "subland")
+      .attr("d", path);
+
+  svg.append("path")
+      .datum(topojson.mesh(subseoul, subseoul.objects.seoul_submunicipalities_geo, function(a, b) { return a !== b; }))
+      .attr("class", "substates")
+      .attr("d", path);
+  
+  var features = topojson.feature(seoul, seoul.objects.seoul_municipalities_geo).features;
+  svg.selectAll('text')
+      .data(features)
+      .enter().append("text")
+        .attr("transform", function(d) { return "translate(" + path.centroid(d) + ")"; })
+        .attr("dy", ".35em")
+        .attr("class", "municipality-label")
+        .text(function(d) { return d.properties.name; })
+}
+
+</script>
