@@ -39,11 +39,11 @@ svg .municipality-label {
 <script>
 
 var width = 960,
-    height = 500;
+    height = 550;
 
 var projection = d3.geo.mercator()
     .center([126.9895, 37.5651])
-    .scale(80000)
+    .scale(90000)
     .translate([width/2, height/2]);
 
 var path = d3.geo.path().projection(projection);
