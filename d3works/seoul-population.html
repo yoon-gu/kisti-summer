@@ -15,8 +15,8 @@
 var width = 960,
     height = 550;
 var fill = d3.scale.log()
-    .domain([10, 500])
-    .range(["brown", "steelblue"]);
+    .domain([700, 50000])
+    .range(["steelblue", "brown"]);
 var projection = d3.geo.mercator()
     .center([126.9895, 37.5651])
     .scale(90000)
@@ -26,17 +26,28 @@ var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height);
 
+var popByName = d3.map();
+
 queue()
   .defer(d3.json, "https://gist.githubusercontent.com/yoon-gu/292357d88f07092f8759238a10cddd2f/raw/bbcdb2cbca6fa5278038e44a6d0aad3f9521fb3e/.seoul_submunicipalities_topo.json")
+  .defer(d3.csv, "https://gist.githubusercontent.com/yoon-gu/4c1f46d5726c7abb9f83b151bb506f61/raw/fa28ed989c750650200ceeabf487d780de51b37e/.popul_data.csv", function(d) {
+      popByName.set(d.name, +d.population);
+  })
   .await(ready); 
   
-function ready(error, kor)
+function ready(error, kor, popul)
 {
   if (error) throw error;
+  var features = topojson.feature(kor, kor.objects.seoul_submunicipalities_geo).features;
+  
+  features.forEach(function(d) {
+      d.properties.population = popByName.get(d.properties.name);
+    });
+
   svg.append("g")
       .attr("class", "counties")
     .selectAll("path")
-      .data(topojson.feature(kor, kor.objects.seoul_submunicipalities_geo).features)
+      .data(features)
     .enter().append("path")
       .attr("d", path)
       .style("fill", function(d) { return fill(path.area(d)); });
