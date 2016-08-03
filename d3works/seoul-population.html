@@ -50,6 +50,15 @@ var svg = d3.select("body").append("svg")
 
 var popByName = d3.map();
 
+var tooltip = d3.select("body")
+  .append("div")
+  .style("position", "absolute")
+  .style("z-index", "10")
+  .style("visibility", "hidden")
+  .style("font-family", "sans-serif")
+  .style("color", "white")
+  .style("font-size", "11px");
+
 queue()
   .defer(d3.json, "https://gist.githubusercontent.com/yoon-gu/292357d88f07092f8759238a10cddd2f/raw/bbcdb2cbca6fa5278038e44a6d0aad3f9521fb3e/.seoul_submunicipalities_topo.json")
   .defer(d3.csv, "https://gist.githubusercontent.com/yoon-gu/4c1f46d5726c7abb9f83b151bb506f61/raw/fa28ed989c750650200ceeabf487d780de51b37e/.popul_data.csv", function(d) {
@@ -74,7 +83,16 @@ function ready(error, kor, popul, seoul)
     .enter().append("path")
       .attr("d", path)
       .style("fill", function(d) { return fill(d.properties.population); })
-      .append("title").text(function(d) {return d.properties.name});
+      .on("mouseover", function(d){
+        tooltip.style("visibility", "visible")
+        .text(d.properties.name + " : " + (d.properties.population/10000).toFixed(2) + "만명");
+      })
+      .on("mousemove", function(){
+        tooltip.style("top", (event.pageY-20)+"px").style("left",(event.pageX-40)+"px");
+      })
+      .on("mouseout", function(){
+        tooltip.style("visibility", "hidden");
+      });
 
   svg.append("path")
       .datum(topojson.mesh(seoul, seoul.objects.seoul_municipalities_geo, function(a, b) { return a !== b; }))
