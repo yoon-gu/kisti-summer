@@ -46,6 +46,15 @@ var svg = d3.select("body").append("svg")
 
 var popByName = d3.map();
 
+var tooltip = d3.select("body")
+  .append("div")
+  .style("position", "absolute")
+  .style("z-index", "10")
+  .style("visibility", "hidden")
+  .style("font-family", "sans-serif")
+  .style("color", "white")
+  .style("font-size", "12px");
+
 queue()
   .defer(d3.json, "https://gist.githubusercontent.com/yoon-gu/b051fd123385303a5c03f0e0a833516c/raw/9fff4a65830be008709112c190c3ed939d42e994/seoul_municipalities_topo.json")
   .defer(d3.csv, "popul_data.csv", function(d) {
@@ -68,7 +77,17 @@ function ready(error, seoul, popul)
       .data(features)
     .enter().append("path")
       .attr("d", path)
-      .style("fill", function(d) { return fill(d.properties.population); });
+      .style("fill", function(d) { return fill(d.properties.population); })
+      .on("mouseover", function(d){
+        tooltip.style("visibility", "visible")
+        .text(Math.round(d.properties.population / 10000) + "만명");
+      })
+      .on("mousemove", function(){
+        tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");
+      })
+      .on("mouseout", function(){
+        tooltip.style("visibility", "hidden");
+      });
 
   svg.selectAll('text')
       .data(features)
