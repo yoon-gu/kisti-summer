@@ -85,10 +85,10 @@ function ready(error, kor, popul, seoul)
       .style("fill", function(d) { return fill(d.properties.population); })
       .on("mouseover", function(d){
         tooltip.style("visibility", "visible")
-        .text(d.properties.name + " : " + (d.properties.population/10000).toFixed(2) + "만명");
+        .html(d.properties.name + " <br/> " + (d.properties.population/10000).toFixed(2) + "만명");
       })
       .on("mousemove", function(){
-        tooltip.style("top", (event.pageY-20)+"px").style("left",(event.pageX-40)+"px");
+        tooltip.style("top", (event.pageY-20)+"px").style("left",(event.pageX+10)+"px");
       })
       .on("mouseout", function(){
         tooltip.style("visibility", "hidden");
