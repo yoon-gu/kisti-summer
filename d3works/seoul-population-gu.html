@@ -8,14 +8,13 @@
 }
 
 path {
-  fill:grey;
-  stroke: #fff;
-  stroke-width:.5px;
+  fill:none;
 }
 
-.counties{
-  stroke: darkgrey;
-  stroke-width:0.3px;
+.boundary {
+  fill: none;
+  stroke: #fff;
+  stroke-width:.5px;
 }
 
 .municipality-label{
@@ -72,7 +71,6 @@ function ready(error, seoul, popul)
     });
 
   svg.append("g")
-      .attr("class", "counties")
     .selectAll("path")
       .data(features)
     .enter().append("path")
@@ -88,6 +86,11 @@ function ready(error, seoul, popul)
       .on("mouseout", function(){
         tooltip.style("visibility", "hidden");
       });
+
+  svg.append("path")
+      .datum(topojson.mesh(seoul, seoul.objects.seoul_municipalities_geo, function(a, b) { return a !== b; }))
+      .attr("class", "boundary")
+      .attr("d", path);
 
   svg.selectAll('text')
       .data(features)
