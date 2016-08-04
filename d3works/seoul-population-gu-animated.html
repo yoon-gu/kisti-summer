@@ -25,6 +25,8 @@ path {
 }
 </style>
 <body>
+  <button>Change!</button>
+</body>
 <script src="//d3js.org/d3.v3.min.js"></script>
 <script src="//d3js.org/queue.v1.min.js"></script>
 <script src="//d3js.org/topojson.v1.min.js"></script>
@@ -94,10 +96,13 @@ function ready(error, seoul)
         .attr("dy", ".35em")
         .attr("class", "municipality-label")
         .text(function(d) { return d.properties.name; })
-};
 
-function update(source){
-
+  d3.select("button").on("click", function(d){
+  svg.selectAll("path")
+    .transition()
+    .delay(750)
+    .style("opacity", 0.1);
+  });
 };
 
 </script>
