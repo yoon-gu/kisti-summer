@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+.states {
+  fill: none;
+  stroke: #fff;
+  stroke-linejoin: round;
+}
+
+path {
+  fill:none;
+}
+
+.boundary {
+  fill: none;
+  stroke: #fff;
+  stroke-width:.5px;
+}
+
+.municipality-label{
+  fill: white;
+  font-size: 12px;
+  text-anchor: middle;
+  font-family: sans-serif;
+}
+</style>
+<body>
+<script src="//d3js.org/d3.v3.min.js"></script>
+<script src="//d3js.org/queue.v1.min.js"></script>
+<script src="//d3js.org/topojson.v1.min.js"></script>
+<script>
+var width = 960,
+    height = 550;
+var fill = d3.scale.linear()
+    .domain([130000, 680000])
+    .range(["steelblue", "brown"]);
+var projection = d3.geo.mercator()
+    .center([126.9895, 37.5651])
+    .scale(90000)
+    .translate([width/2, height/2]);
+var path = d3.geo.path().projection(projection);
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+var popByName = d3.map();
+
+var tooltip = d3.select("body")
+  .append("div")
+  .style("position", "absolute")
+  .style("z-index", "10")
+  .style("visibility", "hidden")
+  .style("font-family", "sans-serif")
+  .style("color", "white")
+  .style("font-size", "12px");
+
+queue()
+  .defer(d3.json, "https://gist.githubusercontent.com/yoon-gu/b051fd123385303a5c03f0e0a833516c/raw/9fff4a65830be008709112c190c3ed939d42e994/seoul_municipalities_topo.json")
+  .defer(d3.csv, "popul_data.csv", function(d) {
+      popByName.set(d.name, +d.population);
+  })
+  .await(ready); 
+  
+function ready(error, seoul, popul)
+{
+  if (error) throw error;
+  var features = topojson.feature(seoul, seoul.objects.seoul_municipalities_geo).features;
+  
+  features.forEach(function(d) {
+      d.properties.population = popByName.get(d.properties.name);
+    });
+
+  svg.append("g")
+    .selectAll("path")
+      .data(features)
+    .enter().append("path")
+      .attr("d", path)
+      .style("fill", function(d) { return fill(d.properties.population); })
+      .on("mouseover", function(d){
+        tooltip.style("visibility", "visible")
+        .text(Math.round(d.properties.population / 10000) + "만명");
+      })
+      .on("mousemove", function(){
+        tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");
+      })
+      .on("mouseout", function(){
+        tooltip.style("visibility", "hidden");
+      });
+
+  svg.append("path")
+      .datum(topojson.mesh(seoul, seoul.objects.seoul_municipalities_geo, function(a, b) { return a !== b; }))
+      .attr("class", "boundary")
+      .attr("d", path);
+
+  svg.selectAll('text')
+      .data(features)
+      .enter().append("text")
+        .attr("transform", function(d) { return "translate(" + path.centroid(d) + ")"; })
+        .attr("dy", ".35em")
+        .attr("class", "municipality-label")
+        .text(function(d) { return d.properties.name; })
+};
+</script>
