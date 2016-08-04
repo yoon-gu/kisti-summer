@@ -58,17 +58,19 @@ queue()
   .defer(d3.json, "https://gist.githubusercontent.com/yoon-gu/b051fd123385303a5c03f0e0a833516c/raw/9fff4a65830be008709112c190c3ed939d42e994/seoul_municipalities_topo.json")
   .await(ready); 
   
-function ready(error, seoul, popul)
+function ready(error, seoul)
 {
   if (error) throw error;
   var features = topojson.feature(seoul, seoul.objects.seoul_municipalities_geo).features;
-
+  features.forEach(function(d) {
+      d.properties.population = 550000 * Math.random() + 13000;
+    });
   svg.append("g")
     .selectAll("path")
       .data(features)
     .enter().append("path")
       .attr("d", path)
-      .style("fill", function(d) { return fill(550000 * Math.random() + 13000); })
+      .style("fill", function(d) { return fill(d.properties.population); })
       .on("mouseover", function(d){
         tooltip.style("visibility", "visible")
         .text(Math.round(d.properties.population / 10000) + "만명");
