@@ -98,6 +98,6 @@ function ready(error, seoul, popul)
         .attr("transform", function(d) { return "translate(" + path.centroid(d) + ")"; })
         .attr("dy", ".35em")
         .attr("class", "municipality-label")
-        .text(function(d) { return d.properties.name; })
+        .text(function(d) { return d.properties.name; });
 };
 </script>

@@ -29,6 +29,9 @@ path {
   <input id="input" type="range" min="0" max="100" value="25" style="width:240px;">
   <i>k</i> = <output name="output" for="input">0.250</output>
 </form>
+<ul>
+  
+</ul>
 </body>
 <script src="//d3js.org/d3.v3.min.js"></script>
 <script src="//d3js.org/queue.v1.min.js"></script>
@@ -117,20 +120,16 @@ function change() {
 
         svg.selectAll("path")
             .data(features)
-            .on("mouseover", function(d){
-              tooltip.style("visibility", "visible")
-              .text(Math.round(d.properties.population / 10000) + "만명");
-            })
-            .on("mousemove", function(){
-              tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");
-            })
-            .on("mouseout", function(){
-              tooltip.style("visibility", "hidden");
-            })
             .transition()
             .style("fill", function(d) { return fill(d.properties.population); });
     });
 };
 
+d3.select("ul").selectAll("li")
+      .data([2013, 2014, 2015, 2016])
+      .enter().append("li")
+        .append("a")
+        .attr("href", "#")
+        .text(function(d) { return d; });
 
 </script>
