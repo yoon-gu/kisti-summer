@@ -25,12 +25,19 @@ path {
 }
 </style>
 <body>
-  <button>Change!</button>
+<form oninput="output.value = (input.value/100).toFixed(3)" style="top:10px;left:10px;">
+  <input id="input" type="range" min="0" max="100" value="25" style="width:240px;">
+  <i>k</i> = <output name="output" for="input">0.250</output>
+</form>
 </body>
 <script src="//d3js.org/d3.v3.min.js"></script>
 <script src="//d3js.org/queue.v1.min.js"></script>
 <script src="//d3js.org/topojson.v1.min.js"></script>
+<script src="//d3js.org/d3-timer.v1.min.js"></script>
 <script>
+var features, opc;
+d3.select("form")
+    .on("input", function() { change(+this.output.value); });
 var width = 960,
     height = 550;
 var fill = d3.scale.linear()
@@ -63,7 +70,7 @@ queue()
 function ready(error, seoul)
 {
   if (error) throw error;
-  var features = topojson.feature(seoul, seoul.objects.seoul_municipalities_geo).features;
+  features = topojson.feature(seoul, seoul.objects.seoul_municipalities_geo).features;
   features.forEach(function(d) {
       d.properties.population = 550000 * Math.random() + 13000;
     });
@@ -96,13 +103,12 @@ function ready(error, seoul)
         .attr("dy", ".35em")
         .attr("class", "municipality-label")
         .text(function(d) { return d.properties.name; })
-
-  d3.select("button").on("click", function(d){
-  svg.selectAll("path")
-    .transition()
-    .delay(750)
-    .style("opacity", 0.1);
-  });
 };
 
+function change(opc) {
+  svg.selectAll("path")
+    .transition()
+    .delay(500)
+    .style("opacity", opc);
+};
 </script>
