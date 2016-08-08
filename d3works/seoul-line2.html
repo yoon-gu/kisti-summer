@@ -99,6 +99,11 @@ function ready(error, kor, stations, inout) {
     .domain([1,110000])
     .range([3,30]);
 
+  stations = stations.sort(function(x, y){
+    if(popByName.get(x.name) && popByName.get(y.name)){
+      return d3.descending(popByName.get(x.name).on, popByName.get(y.name).on);
+    }
+  });
   g.selectAll("circle")
       .data(stations)
     .enter().append("circle")
