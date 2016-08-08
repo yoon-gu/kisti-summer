@@ -106,7 +106,6 @@ function ready(error, kor, stations, inout) {
   });
   for (var i = 1; i <= 8; i++) {
     g.append("g")
-      .attr("class", function(d){ return "no_l_" + i; })
       .selectAll("circle")
         .data(stations)
       .enter().append("circle")
@@ -124,16 +123,23 @@ function ready(error, kor, stations, inout) {
             return 2;
           }
         })
-        .attr("opacity", 0.5)
+        .attr("opacity", 0.2)
         .on("mouseover", function(d){
           tooltip.style("visibility", "visible")
           .text(d.name + " : " + (popByName.get(d.name).on / 10000).toFixed(2) + "만명");
+          var g = d3.select(this).node().parentNode;
+          d3.select(g)
+          .attr("class", function(){ return "no_l_" + d.no_line; })
+          .selectAll("circle").attr("opacity", 0.7);
         })
         .on("mousemove", function(){
           tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");
         })
         .on("mouseout", function(){
           tooltip.style("visibility", "hidden");
+          var g = d3.select(this).node().parentNode;
+          d3.select(g).attr("class", "")
+            .selectAll("circle").attr("opacity", 0.2);
         });
   }
 
