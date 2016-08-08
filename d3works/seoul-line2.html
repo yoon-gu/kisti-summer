@@ -37,6 +37,7 @@ svg .municipality-label {
 <script src="//d3js.org/queue.v1.min.js"></script>
 <script src="//d3js.org/topojson.v1.min.js"></script>
 <script>
+var popByName = d3.map();
 
 var width = 960,
     height = 550;
@@ -66,9 +67,12 @@ var tooltip = d3.select("body")
 queue()
     .defer(d3.json, "https://gist.githubusercontent.com/yoon-gu/b051fd123385303a5c03f0e0a833516c/raw/9fff4a65830be008709112c190c3ed939d42e994/seoul_municipalities_topo.json")
     .defer(d3.csv, "https://gist.githubusercontent.com/yoon-gu/902efb6d5bd345e3837e035a3c0642b8/raw/3a18efd4d12b792d482f1867bcfc79645876b5ce/station_latlen.csv")
+    .defer(d3.csv, "subway_in_out.csv", function(d){
+        popByName.set(d.station, {"on":+d.on, "off":+d.off});
+    })
     .await(ready);
 
-function ready(error, kor, stations) {
+function ready(error, kor, stations, inout) {
   if (error) throw error;
   var features = topojson.feature(kor, kor.objects.seoul_municipalities_geo).features;
   g.selectAll("path")
@@ -91,13 +95,22 @@ function ready(error, kor, stations) {
         .attr("class", "municipality-label")
         .text(function(d) { return d.properties.name; })
   
+  var rscale = d3.scale.linear()
+    .domain([1,110000])
+    .range([3,30]);
+
   g.selectAll("circle")
       .data(stations)
     .enter().append("circle")
       .filter(function(d) { return d.no_line === "2" })
       .attr("cx", function(d) { return projection([d.lon, d.lat])[0]; })
       .attr("cy", function(d) { return projection([d.lon, d.lat])[1]; })
-      .attr("r", function(d){return 30 * Math.random();})
+      .attr("r", function(d){
+        if(popByName.get(d.name))
+        {
+          return rscale(popByName.get(d.name).on);
+        }
+      })
       .attr("opacity", 0.7)
       .attr("class", function(d){ return "no_l_" + d.no_line; })
       .on("mouseover", function(d){
