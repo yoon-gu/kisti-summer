@@ -77,7 +77,25 @@
 						<h5>Seoul Population in 2013</h5>
 						<iframe src="d3works/seoul-population.html" width="960"
 						marginwidth="0" marginheight="0" style="height:550px;" scrolling="no"></iframe>
-					</section>	
+					</section>
+					<section data-transition="fade-out">
+						<h5>Seoul Vaccine Population in 2013</h5>
+						<iframe src="d3works/seoul-vaccine-population.html" width="960"
+						marginwidth="0" marginheight="0" style="height:550px;" scrolling="no"></iframe>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+					        | name | population | vaccine   | percent | 
+					        |------|------------|-------|---------| 
+					        | 중구   | 130465     | 21796 | 16.70   |  
+					        | 은평구  | 503660     | 76341 | 15.15   | 
+					        | 서대문구 | 314110     | 50521 | 16.08   | 
+					        | 관악구  | 518028     | 71624 | 13.82   | 
+					        | 서초구  | 441763     | 64006 | 14.48   | 
+					        | 강남구  | 563599     | 71429 | 12.67   | 
+					        | 송파구  | 668415     | 87467 | 13.08   |  
+					    </script>
+					</section>
 				</section>
 				<section data-transition="fade-out">
 					<section data-transition="fade-out">
@@ -100,6 +118,29 @@
 						<iframe src="d3works/seoul-line-influx.html" width="960"
 						marginwidth="0" marginheight="0" style="height:550px;" scrolling="no"></iframe>
 					</section>
+					<section data-transition="fade-out">
+						<h5>하루 평균 (승차 - 하차) 인구</h5>
+						<iframe src="d3works/seoul-line-outflux.html" width="960"
+						marginwidth="0" marginheight="0" style="height:550px;" scrolling="no"></iframe>
+					</section>
+				</section>
+				<section>
+					<h3>25-Patch SIR Model</h3>
+					<ol>
+						<li>25 patches for XX구s</li>
+						<li>written in <code>Python</code></li>
+						<li>displayed in <code>JavaScript</code></li>
+						<li>shared via <code>Web</code></li>
+					</ol>
+				</section>
+				<section>
+					<h3>Parallel Algorithm to solve PDE</h3>
+					<ol>
+						<li><code>OpenMP</code> : Numerical Integration</li>
+						<li><code>MPI</code> : Domain Decomposition</li>
+						<li class="fragment highlight-blue"><code>Intel MKL</code> : Matrix Equation</li>
+						<li class="fragment highlight-blue"><code>cuBLAS</code> : Matrix Equation</li>
+					</ol>
 				</section>
 				<section data-transition="slide-out">
 					<h1>감사합니다.</h1>
