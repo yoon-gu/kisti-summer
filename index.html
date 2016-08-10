@@ -24,6 +24,37 @@
 	<body>
 		<div class="reveal">
 			<div class="slides">
+				<section>
+					<h3>KODES</h3>
+					<ul>
+						<li><code class="fragment strike highlight-red">epidemic_age, epidemic_month, epidemic_region, etc</code></strike></li>
+						<li><code class="fragment strike highlight-blue">population in 2010</code>
+						<li><code class="fragment highlight-green">population in 2013</code></li>
+						</li>
+						<li class="fragment strike highlight-red"><code>floating_population</code> in 2013</li>
+						<li><code>seoul_sub_1to4, seoul_sub_5to8</code></li>
+						<li><code>seoul_vaccine</code></li>
+						<li><code class="fragment highlight-green">subway_address</code></li>
+						</li>
+					</ul>
+				</section>
+				<section>
+					<h3>Additional</h3>
+					<ol>
+						<li><code>KODES data loader</code></li>
+						<ul>
+							<li>IPython Notebook (a.k.a. Jupyter Notebook)</li>
+							<li><code>SSHTunnelForwarder</code></li>
+							<li><code>mysql.connector</code></li>
+							<li><code>pandas</code></li>
+						</ul>
+						<li>Converter : Address to (longitude, latitude)</li>
+						<ul>
+							<li><code>Python</code></li>
+							<li><code>Naver Open API</code></li>
+						</ul>
+					</ol>
+				</section>
 				<section data-transition="fade-out">
 					<section data-transition="fade-out">
 						<h5>Seoul municipalities</h5>
@@ -55,8 +86,18 @@
 						marginwidth="0" marginheight="0" style="height:550px;" scrolling="no"></iframe>
 					</section>
 					<section data-transition="fade-out">
-						<h5>Line 2 : 하루 평균 승차 인구</h5>
-						<iframe src="d3works/seoul-line2.html" width="960"
+						<h5>하루 평균 승차 인구</h5>
+						<iframe src="d3works/seoul-line-on.html" width="960"
+						marginwidth="0" marginheight="0" style="height:550px;" scrolling="no"></iframe>
+					</section>
+					<section data-transition="fade-out">
+						<h5>하루 평균 하차 인구</h5>
+						<iframe src="d3works/seoul-line-off.html" width="960"
+						marginwidth="0" marginheight="0" style="height:550px;" scrolling="no"></iframe>
+					</section>
+					<section data-transition="fade-out">
+						<h5>하루 평균 (하차 - 승차) 인구</h5>
+						<iframe src="d3works/seoul-line-influx.html" width="960"
 						marginwidth="0" marginheight="0" style="height:550px;" scrolling="no"></iframe>
 					</section>
 				</section>

@@ -66,7 +66,7 @@ var tooltip = d3.select("body")
 
 queue()
     .defer(d3.json, "https://gist.githubusercontent.com/yoon-gu/b051fd123385303a5c03f0e0a833516c/raw/9fff4a65830be008709112c190c3ed939d42e994/seoul_municipalities_topo.json")
-    .defer(d3.csv, "https://gist.githubusercontent.com/yoon-gu/902efb6d5bd345e3837e035a3c0642b8/raw/3a18efd4d12b792d482f1867bcfc79645876b5ce/station_latlen.csv")
+    .defer(d3.csv, "https://gist.githubusercontent.com/yoon-gu/902efb6d5bd345e3837e035a3c0642b8/raw/3cf9c9418da25e195cfe8db9104497408b6e5bbd/station_latlen.csv")
     .defer(d3.csv, "subway_in_out.csv", function(d){
         popByName.set(d.station, {"on":+d.on, "off":+d.off});
     })
@@ -101,7 +101,7 @@ function ready(error, kor, stations, inout) {
 
   stations = stations.sort(function(x, y){
     if(popByName.get(x.name) && popByName.get(y.name)){
-      return d3.descending(popByName.get(x.name).on, popByName.get(y.name).on);
+      return d3.descending(popByName.get(x.name).off, popByName.get(y.name).off);
     }
   });
   for (var i = 1; i <= 8; i++) {
@@ -115,7 +115,7 @@ function ready(error, kor, stations, inout) {
         .attr("r", function(d){
           if(popByName.get(d.name))
           {
-            return rscale(popByName.get(d.name).on);
+            return rscale(popByName.get(d.name).off);
           }
           else
           {
@@ -126,7 +126,7 @@ function ready(error, kor, stations, inout) {
         .attr("opacity", 0.2)
         .on("mouseover", function(d){
           tooltip.style("visibility", "visible")
-          .text(d.name + " : " + (popByName.get(d.name).on / 10000).toFixed(2) + "만명");
+          .text(d.name + " : " + (popByName.get(d.name).off / 10000).toFixed(2) + "만명");
           var g = d3.select(this).node().parentNode;
           d3.select(g)
           .attr("class", function(){ return "no_l_" + d.no_line; })
